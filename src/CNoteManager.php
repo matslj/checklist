@@ -99,7 +99,7 @@ class CNoteManager {
                 dateNote,
                 checkedNote
             FROM {$tNote}
-            ORDER BY tagNote ASC, dateNote ASC;
+            ORDER BY tagNote ASC, textNote ASC;
 EOD;
 
         // Perform the query and manage results
