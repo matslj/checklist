@@ -178,6 +178,7 @@ div.clear {
 
 .notedata table {
     border-collapse: collapse;
+    width: 100%;
 }
         
 .notedata .row {
@@ -247,4 +248,24 @@ div.clear {
 .notedata a.editTag {
     float: right;
     margin-top: 7px;
+}
+
+/* For smaller devices */
+@media only screen and (max-width:499px) {
+    #newPost {
+        display: none;
+    }
+    
+    .col {
+        width: 99%;
+    }
+    
+    .notedata td.text {
+        width: 80%;
+        font-size: 1.4em;
+    }
+    
+    .notedata a.editTag {
+        display: none;
+    }
 }

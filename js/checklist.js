@@ -190,7 +190,7 @@ var init = null;
                 
                 $("#tagDlg").dialog("open");
                 $("#tagDlg td.tdOldVal").html(tag);
-                $("#tagDlg input").focus();
+                $("#tagDlg input").val("").focus();
                 event.preventDefault();
                 return false;
             }

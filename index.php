@@ -29,7 +29,7 @@ if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine
 (function($) {
     $(document).ready(function() {
         init({
-            colHeight : isMobile ? 400 : 30,
+            colHeight : isMobile ? 600 : 30,
             pagesPath : '<?= $pagesPath ?>'
         });
     });
