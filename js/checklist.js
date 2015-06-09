@@ -95,6 +95,28 @@ var init = null;
             return checked ? "CHECKED" : "";
         });
         htmlTarget = $("#noteList");
+        
+        $("#tagDlg").dialog({
+            autoOpen : false,
+            buttons : {
+                "OK" : function() {
+                    var oldTag = $("#tagDlg td.tdOldVal").html(),
+                        newTag = $("#tagDlg input").val();
+                    if (oldTag && newTag) {
+                        $.ajax({
+                            url: pagesPath + 'ajaxChangeTag.php',
+                            type:'POST',
+                            dataType: "json",
+                            data: "old=" + oldTag + "&new=" + newTag,
+                            success: function(data) {
+                                updateTemplateEntries();
+                            }
+                        });
+                    }
+                    $(this).dialog("close");
+                }
+            }
+        });
 
         // Get all notes and show them using the handlebar template
         // updateTemplateEntries();
@@ -160,6 +182,15 @@ var init = null;
             } else if ($eventTarget.is('h2 a')) {
                 $("#newCategory").val($eventTarget.html());
                 $("#newText").focus();
+                event.preventDefault();
+                return false;
+            } else if ($eventTarget.is('a.editTag')) {
+                var href = $eventTarget.attr('href');
+                var tag = getParameterByName("tag", href);
+                
+                $("#tagDlg").dialog("open");
+                $("#tagDlg td.tdOldVal").html(tag);
+                $("#tagDlg input").focus();
                 event.preventDefault();
                 return false;
             }

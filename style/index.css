@@ -57,12 +57,6 @@ h1 {
     padding: 20px;
 }
 
-#noteList h2 {
-    font-size: 1.5em;
-    color: #000;
-    margin: 7px 0;
-}
-
 #textA {
     width: 815px;
     resize: none;
@@ -216,6 +210,12 @@ div.clear {
     width: 60px;
 }
 
+.notedata h2 {
+    font-size: 1.5em;
+    color: #000;
+    margin: 7px 0;
+    float: left;
+}
 
 .notedata h2 a, .notedata h2 a:link {
     text-decoration: none;
@@ -236,4 +236,15 @@ div.clear {
     float: left;
     width: 250px;
     margin-right: 10px;
+}
+
+/* Dialog */
+#tagDlg table td:first-child {
+    font-weight: bold;
+    width: 100px;
+}
+
+.notedata a.editTag {
+    float: right;
+    margin-top: 7px;
 }

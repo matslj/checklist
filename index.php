@@ -74,12 +74,25 @@ ob_start();
 <div id="noteList"></div>
 
 <!-- Dialoger -->
+<div id="tagDlg" title="Ändra kategori">
+    <table>
+        <tr>
+            <td>Ändra från</td>
+            <td class="tdOldVal"></td>
+        </tr>
+        <tr>
+            <td>Till</td>
+            <td><input type="text" id="tagDlgInput" name="tagDlgInput" placeholder="Ny kategori" /></td>
+        </tr>
+    </table>
+</div>
 
 <!-- Templates for the page -->
 <script id="data-template" type="text/x-handlebars-template">
     {{! Templaten tar emot data som motsvaras av en CNote.php }}
     <div class="notedata">
-        <h2><a href="#">{{tag}}</a> <span>({{size}})<span></h2>
+        <h2><a href="#">{{tag}}</a> <span>({{size}})<span></h2><a class="editTag" href="?tag={{tag}}">[Ändra]</a>
+        <div class="clear"></div>
         <table>
         {{#each data}}
             {{#with this}}

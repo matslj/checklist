@@ -88,6 +88,26 @@ class CNoteManager {
         return $msg;
     }
     
+    public static function changeTag($dbRef, $mysqli, $oldTag, $newTag) {
+        $msg = "";
+        $tNote = DBT_Note;
+        
+        $query = <<< EOD
+            UPDATE {$tNote} SET
+                tagNote = '{$newTag}'
+            WHERE tagNote = '{$oldTag}';
+EOD;
+
+        // Perform the query and manage results
+        $dbRef->Query($query);
+        if($mysqli->affected_rows == 0) {
+            $msg .= "Info: Inga poster matchade '{$oldTag}', så inget uppdaterades";
+        } else if($mysqli->affected_rows < 0) {
+            $msg .= "Fel: tag kunde inte ändras";
+        }
+        return $msg;
+    }
+    
     public static function getNotesFromDB($dbRef) {
         $tNote = DBT_Note;
         
