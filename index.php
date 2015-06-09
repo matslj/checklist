@@ -68,7 +68,7 @@ ob_start();
     <input type="text" id="newText" placeholder="Notering" name="newText" />
     <input type="text" id="newCategory" name="newCategory" placeholder="Kategori" />
     <button id='newNoteButton'>OK</button>
-    <span style="display: inline-block; margin-left: 20px; font-size: 0.8em;">(istället för att trycka på OK, kan du trycka på ENTER när du står i något av textfälten)</span>
+    <span>(istället för att trycka på OK, kan du trycka på ENTER när du står i något av textfälten)</span>
 </div>
 
 <div id="noteList"></div>
@@ -98,7 +98,7 @@ ob_start();
             {{#with this}}
                 <tr class="row">
                     <td><input id="{{id}}-chk" type="checkbox" name="checkedNote" {{chkBoxHelper checked}} value="true"></td>
-                    <td class="text">{{text}}</td>
+                    <td class="text{{chkBoxHelper checked}}">{{text}}</td>
                     <td>
                         <a class="deletePost" href="?id={{id}}">
                             <img src="<?=$img?>close_16.png">

@@ -92,7 +92,7 @@ var init = null;
         templateContent = $("#data-template").html();
         template = Handlebars.compile(templateContent);
         Handlebars.registerHelper('chkBoxHelper', function(checked) {
-            return checked ? "CHECKED" : "";
+            return checked ? " CHECKED" : "";
         });
         htmlTarget = $("#noteList");
         

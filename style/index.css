@@ -250,9 +250,26 @@ div.clear {
     margin-top: 7px;
 }
 
+#newPost button+span {
+    display: inline-block;
+    margin-left: 20px;
+    font-size: 0.8em;
+}
+
+.CHECKED {
+    text-decoration: line-through;
+}
+
 /* For smaller devices */
-@media only screen and (max-width:499px) {
-    #newPost {
+@media only screen and (min-device-width: 320px) 
+  and (max-device-width: 480px)
+  and (-webkit-min-device-pixel-ratio: 2) {
+      
+    #newPost input {
+        display: block;
+    }
+    
+    #newPost button+span {
         display: none;
     }
     
@@ -260,9 +277,13 @@ div.clear {
         width: 99%;
     }
     
+    .notedata h2 {
+        font-size: 2.5em;
+    }
+    
     .notedata td.text {
         width: 80%;
-        font-size: 1.4em;
+        font-size: 2em;
     }
     
     .notedata a.editTag {
