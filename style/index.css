@@ -227,6 +227,11 @@ div.clear {
     color: #ccc;
 }
 
+.notedata h2 span {
+    font-size: 0.8em;
+    color: brown;
+}
+
 .col {
     float: left;
     width: 250px;

@@ -43,6 +43,11 @@ var init = null;
                     }
                     tempMap[lastTag].push(entry);
                 }
+                
+                var tempNrOfEntriesCol = Math.ceil(length / 4);
+                if (tempNrOfEntriesCol > entriesInCol) {
+                    entriesInCol = tempNrOfEntriesCol;
+                }
 
                 var $col = htmlTarget.append('<div class="col"/>').find(':last');
                 i = 0;
@@ -53,7 +58,7 @@ var init = null;
                             $col = htmlTarget.append('<div class="col"/>').find(':last');
                             i = 0;
                         }
-                        $col.append(template({tag: key, data: tempMap[key]}));
+                        $col.append(template({tag: key, size: tempMap[key].length, data: tempMap[key]}));
                         i = i + tempMap[key].length;
                     }
                 }

@@ -29,7 +29,7 @@ if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine
 (function($) {
     $(document).ready(function() {
         init({
-            colHeight : isMobile ? 400 : 20,
+            colHeight : isMobile ? 400 : 30,
             pagesPath : '<?= $pagesPath ?>'
         });
     });
@@ -79,7 +79,7 @@ ob_start();
 <script id="data-template" type="text/x-handlebars-template">
     {{! Templaten tar emot data som motsvaras av en CNote.php }}
     <div class="notedata">
-        <h2><a href="#">{{tag}}</a></h2>
+        <h2><a href="#">{{tag}}</a> <span>({{size}})<span></h2>
         <table>
         {{#each data}}
             {{#with this}}
