@@ -1,0 +1,223 @@
+/* 
+    Document   : index
+    Created on : 2014-jul-01, 20:11:30
+    Author     : ldc-msl
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+@import url("login.css");
+
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: url("body.gif") repeat scroll 0 0 #ededed;
+    font-family: "Lucida Grande","Lucida Sans Unicode",sans-serif;
+    font-size: 70%;
+    line-height: 1.3em;
+}
+
+#footer {
+    text-align: center;
+}
+
+h1 {
+    color: #a72123;
+    font-size: 2.2em;
+    line-height: 1.1em;
+}
+
+#promotext {
+    font-size: 1.25em;
+    line-height: 1.25em;
+    padding: 0;
+}
+
+#header {
+    padding: 10px 20px;
+}
+
+#header h1 {
+    padding: 0;
+    margin: 0;
+}
+
+#header p {
+    padding: 0;
+    margin: 0;
+}
+
+#content {
+    margin: 0 20px;
+    background-color: #ffffff;
+    border: 2px solid #2d8f8b;
+    padding: 20px;
+}
+
+#noteList h2 {
+    font-size: 1.5em;
+    color: #000;
+    margin: 7px 0;
+}
+
+#textA {
+    width: 815px;
+    resize: none;
+    overflow-y: scroll;
+}
+
+.ui-widget-header {
+    background: #861b1d;
+    border: 1px solid #e78f08;
+    color: #fff;
+    font-weight: bold;
+}
+
+/* ----------------------------------------------------------------------------*/
+/* Markup feature */
+span.copyText {
+    position: relative;
+    display: block;
+}
+
+#tmp {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 0 none transparent;
+    margin: 0;
+    padding: 0;
+    outline: none;
+    resize: none;
+    overflow: hidden;
+    font-family: inherit;
+    font-size: 1em;
+}
+
+/* Overlay error popup */
+.overlay-bg {
+    /* display: none; */
+    position: absolute;
+    top: 0;
+    left: 0;
+    height:100%;
+    width: 100%;
+    cursor: pointer;
+    z-index: 1000; /* high z-index */
+    background: #000; /* fallback */
+    background: rgba(0,0,0,0.75);
+    
+    -moz-box-sizing: border-box; 
+    -webkit-box-sizing: border-box; 
+    box-sizing: border-box;
+}
+
+.overlay-content {
+    /* display: none; */
+    background: #fff;
+    padding: 1%;
+    width: 40%;
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    margin: 0 0 0 -20%; /* add negative left margin for half the width to center the div */
+    cursor: default;
+    z-index: 10001;
+    border-radius: 4px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.9);
+    
+    color: red;
+}
+
+.overlay-content h3 {
+    font-size: 1.1em;
+    text-align: center;
+}
+
+.overlay-content ul {
+    padding-left: 20px;
+}
+
+
+/* jQuery UI Styling */
+
+/* dialog */
+
+.ui-dialog {
+    border: 1px solid black;
+}
+
+.ui-dialog-content.ui-widget-content {
+    background: #fff;
+    background-image: none;
+}
+
+#errorDialog.ui-dialog-content.ui-widget-content {
+    padding-top: 10px;
+    color: red;
+}
+
+#errorDialog.ui-dialog-content.ui-widget-content td:first-child {
+    padding-right: 10px;
+}
+
+/* Allmänna */
+div.clear {
+    clear: both;
+}
+
+/* List */
+
+.notedata {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 5px 0 0 0;
+    -webkit-border-radius: 7px;
+    -moz-border-radius: 7px;
+    border-radius: 7px;
+}
+
+.notedata table {
+    border-collapse: collapse;
+}
+        
+.notedata .row {
+    padding: 4px 4px 0 4px;
+}
+
+.notedata td.text {
+    width: 170px;
+}
+
+.notedata .row:nth-child(even) {
+    background-color: #D7EBF9;
+}
+        
+.notedata .row:nth-child(odd) {
+    background-color: #FFF;
+}
+
+.notedata .row .time {
+    width: 40px;
+    font-style: italic;
+}
+
+.notedata .row .literal {
+    width: 100px;
+    font-weight: bold;
+}
+
+.notedata span.value {
+    width: 60px;
+}
+
+.col {
+    float: left;
+    width: 250px;
+    margin-right: 10px;
+}
