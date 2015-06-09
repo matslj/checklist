@@ -152,6 +152,11 @@ var init = null;
                         updateTemplateEntries();
                     }
                 });
+            } else if ($eventTarget.is('h2 a')) {
+                $("#newCategory").val($eventTarget.html());
+                $("#newText").focus();
+                event.preventDefault();
+                return false;
             }
         });
 

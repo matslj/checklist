@@ -216,6 +216,17 @@ div.clear {
     width: 60px;
 }
 
+
+.notedata h2 a, .notedata h2 a:link {
+    text-decoration: none;
+    outline: 0;
+    color: #000;
+}
+
+.notedata h2 a:hover {
+    color: #ccc;
+}
+
 .col {
     float: left;
     width: 250px;
