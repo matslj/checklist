@@ -1,9 +1,12 @@
 <?php
 // ===========================================================================================
 //
-// File: PScoreboard.php
+// File: ajaxCreateNote.php
 //
-// Description: This provides the content for a score board dialog in html format.
+// Description: Creates a note in the note table.
+//            
+//              Returns json with content-type text/html. Thought to be used in
+//              an ajax call.
 //
 // Author: Mats Ljungquist
 //
@@ -12,19 +15,15 @@
 require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . 'config.php');
 $intFilter = new CInterceptionFilter();
 $intFilter->UserIsSignedInOrRecirectToSignIn();
-// -------------------------------------------------------------------------------------------
-//
-// Interception Filter, controlling access, authorithy and other checks.
-//
-//$intFilter = new CInterceptionFilter();
-//$intFilter->FrontControllerIsVisitedOrDie();
 
+// Get request parameters and validate
 $pc = CPageController::getInstance(FALSE);
 $payload = $pc->POSTisSetOrSetDefault('payload', '');
 
 $data = json_decode($payload);
 $status = "ERROR";
 
+// Connect to db and add the new note
 $db = new CDatabaseController();
 $mysqli = $db->Connect();
 
@@ -38,6 +37,7 @@ if ($text && $tag) {
 
 $mysqli->close();
 
+// Return status (of how the db operation went) in json format
 $jsonResult .= <<< EOD
 {
     "status": "{$status}"

@@ -1,4 +1,20 @@
 <?php
+// ===========================================================================================
+//
+// File: index.php
+//
+// Description: Main page of the application. This app is more or less a one page
+//              application; once logged in the user never leaves this page (util logout).
+//              
+//              Data is presented through standard html and html presented through a
+//              handlebars template populated by an ajax request.
+//              
+//              What does it do then; it presents a dynamic checklist where a user can
+//              add new notes and categorize them. Categories can be changed, notes can
+//              be deleted and checked/unchecked.
+//
+// Author: Mats Ljungquist
+//
 
 require_once "template.php";
 
@@ -58,8 +74,6 @@ $shell['html_header'] = ob_get_contents();
 ob_end_clean();
 // ** Header i html body är nu satt
 // *****************************************
-
-
 
 ob_start();
 ?>

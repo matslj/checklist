@@ -1,4 +1,17 @@
 <?php
+// ===========================================================================================
+//
+// File: PLogin.php
+//
+// Description: Login page for the application. Simple login form; only supports
+//              login, not creating of account or password change.
+//              
+//              On successful login the user will always be directed to index.php.
+//              If the user tries to access index.php or any ajax service without
+//              being logged in, the user will be redirected to this page.
+//
+// Author: Mats Ljungquist
+//
 
 require_once "../../template.php";
 

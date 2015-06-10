@@ -1,4 +1,21 @@
 <?php
+// ===========================================================================================
+//
+// File: config.php
+//
+// Description: Configuration file for the application. The moste important thing to set here
+//              is the WS_SITELINK which should contain an url to your installation. In dev
+//              mode this will probably be localhost.
+//              
+//              Nothing else has to be changed if you're not altering the structure of the
+//              application.
+//              
+//              OBSERVE that there is another config file: sql/config.php which contains
+//              the db connection data. This file has to be changed with the specifics
+//              for your database.
+//              
+// Author: Mats Ljungquist
+//
 
 define('WS_SITELINK',   'http://localhost/checklist/');           // Link to site.
 define('WS_CHARSET', 	'utf-8');

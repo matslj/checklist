@@ -1,9 +1,21 @@
 <?php
+// ===========================================================================================
+//
+// File: PInstallProcess.php
+//
+// Description: Installs all the tables and stored routines needed by the application
+//              in the database given by the info in sql/config.php.
+//              
+//              This directory, the pages/install directory, should be deleted in
+//              production.
+//
+// Author: Mats Ljungquist
+//
 
 require_once "../../template.php";
 
 // Set simple page variables that are used by template.php
-$shell['title'] = "Kaninboets checklista";
+$shell['title'] = "Installera checklista";
 $shell['html_head'] = "";
 
 $pagesPath = WS_SITELINK . "pages/install/";

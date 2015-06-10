@@ -13,17 +13,14 @@
 require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . 'config.php');
 $intFilter = new CInterceptionFilter();
 $intFilter->UserIsSignedInOrRecirectToSignIn();
-// -------------------------------------------------------------------------------------------
-//
-// Interception Filter, controlling access, authorithy and other checks.
-//
-//$intFilter = new CInterceptionFilter();
-//$intFilter->FrontControllerIsVisitedOrDie();
 
+// Connect to db and get all the notes
 $db = new CDatabaseController();
 $mysqli = $db->Connect();
 
 $notes = new CNoteManager();
+
+// Return notes in json format (array of note objects)
 $jsonResult = $notes -> getNotesAsJson($db);
 
 $mysqli->close();

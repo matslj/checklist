@@ -17,12 +17,12 @@ function getErrorMessage() {
 
     if(isset($_SESSION['errorMessage'])) {
         $html = <<<EOD
-<div class="ui-widget">
-    <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
-        <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
-        <strong>Fel:</strong> {$_SESSION['errorMessage']}</p>
-    </div>
-</div>
+        <div class="ui-widget">
+            <div class="ui-state-error ui-corner-all" style="padding: 0 .7em;">
+                <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+                <strong>Fel:</strong> {$_SESSION['errorMessage']}</p>
+            </div>
+        </div>
 
 EOD;
         unset($_SESSION['errorMessage']);

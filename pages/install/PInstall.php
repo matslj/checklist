@@ -1,9 +1,21 @@
 <?php
+// ===========================================================================================
+//
+// File: PInstall.php
+//
+// Description: Installs all the tables and stored routines needed by the application
+//              in the database given by the info in sql/config.php.
+//              
+//              This directory, the pages/install directory, should be deleted in
+//              production.
+//
+// Author: Mats Ljungquist
+//
 
 require_once "../../template.php";
 
 // Set simple page variables that are used by template.php
-$shell['title'] = "Kaninboets checklista";
+$shell['title'] = "Installera checklista";
 $shell['html_head'] = "";
 
 $pagesPath = WS_SITELINK . "pages/install/";
@@ -42,25 +54,12 @@ ob_start();
 ?>
 
 <h1>Install database</h1>
-<p>
-Click below link to remove all contents from the database and create new tables and content from
-scratch.
-</p>
-<p>
-Database host: '<?=$host?>'
-</p>
-<p>
-Database name: '<?=$database?>'
-</p>
-<p>
-Prefix for tables: '<?=$prefix?>'
-</p>
-<p>
-Update the database config-file (usually sql/config.php) to change the values.
-</p>
-<p>
-&not; <a href='<?=$pagesPath . "PInstallProcess.php"?>'>Destroy current database and create from scratch</a>
-</p>
+<p>Click below link to remove all contents from the database and create new tables and content from scratch.</p>
+<p>Database host: '<?=$host?>'</p>
+<p>Database name: '<?=$database?>'</p>
+<p>Prefix for tables: '<?=$prefix?>'</p>
+<p>Update the database config-file (usually sql/config.php) to change the values.</p>
+<p>&not; <a href='<?=$pagesPath . "PInstallProcess.php"?>'>Destroy current database and create from scratch</a></p>
 
 <?php
 $shell['html_body'] = ob_get_contents();
