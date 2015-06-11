@@ -20,12 +20,14 @@ var init = null; // externalized handle to the init function (see below)
      */
     init = function(config) {
         
-        var template = null,                 // A handle to the handlebars template
-            $htmlTarget = null,              // The html container where the notes will be presented
-            entriesInCol = config.colHeight, // The minimum number of entries to be presented in a column
-                                             // before it breaks into another column.
-            pagesPath = config.pagesPath,    // Path to where all the ajax services resides.
-            maxNrOfColumns = 4;              // The maximum number of columns which the notes will be displayed in
+        var template = null,                       // A handle to the handlebars template
+            $htmlTarget = $("#noteList"),          // The html container where the notes will be presented
+            pagesPath = config.pagesPath,          // Path to where all the ajax services resides.
+            CONST_entriesInCol = config.colHeight, // The minimum number of entries to be presented in a column
+                                                   // before it breaks into another column.
+            CONST_maxNrOfColumns = 4,              // The maximum number of columns which the notes will be displayed in
+            CONST_columnWidth = 260,               // In pixels, includes right side margin
+            $content = $("#content");
 
         /**
          * Extracts the value of a given (named) parameter from an url.
@@ -59,8 +61,13 @@ var init = null; // externalized handle to the init function (see below)
          * they will also be displayed in the same (single) column (because the method
          * wont break the 50 row category).
          * <p>
-         * Also, and this is the most dynamic part, if the total number of rows
-         * is to great to fit into maxNrOfColumns x entriesInCol then the entriesInCol
+         * Also, and this is the most dynamic part, the number of columns to be shown
+         * is dynamically calculated from the width of the content-element divided
+         * by the column width and if the calculated number of columns is more than
+         * the predefined number of columns, the calculated number will be used.
+         * <p>
+         * And if the total number of rows
+         * is too great to fit into maxNrOfColumns x entriesInCol then the entriesInCol
          * will be automatically recalculated to fit the total number of rows.
          * 
          * @returns {undefined} returns nothing
@@ -78,6 +85,8 @@ var init = null; // externalized handle to the init function (see below)
                     entry = null,
                     tempMap = {};
 
+                // Put the recieved object array into an map where the key is the tag/category
+                // and the value is an array with all the notes with the same tag/category name.
                 for (i; i < length; i++) {
                     entry = data[i];
                     if (lastTag == null || lastTag != entry.tag) {
@@ -87,17 +96,26 @@ var init = null; // externalized handle to the init function (see below)
                     tempMap[lastTag].push(entry);
                 }
                 
-                var tempNrOfEntriesCol = Math.ceil(length / maxNrOfColumns);
-                if (tempNrOfEntriesCol > entriesInCol) {
-                    entriesInCol = tempNrOfEntriesCol;
+                // Calculate number of columns with a maxNrOfColumns threshold (depends on browser window size)
+                var maxNrOfColumns = Math.floor($content.width() / CONST_columnWidth);
+                if (maxNrOfColumns <= CONST_maxNrOfColumns) {
+                    maxNrOfColumns = CONST_maxNrOfColumns;
+                }
+
+                // Calculate number of entries in each column with a entriesInCol threshold
+                var entriesInCol = Math.ceil(length / maxNrOfColumns);
+                if (entriesInCol <= CONST_entriesInCol) {
+                    entriesInCol = CONST_entriesInCol;
                 }
 
                 var $col = $htmlTarget.append('<div class="col"/>').find(':last');
-                i = 0;
+                i = 0; // Counts the number of items in the current column
                 // Feed the template with the map created above.
                 for (var key in tempMap) {
                     if (tempMap.hasOwnProperty(key)) {
-                        if (i > entriesInCol) {
+                        // If the number of items in the current column is greater than the entriesInCol threshold
+                        // create a new column.
+                        if (i >= entriesInCol) {
                             $col = $htmlTarget.append('<div class="col"/>').find(':last');
                             i = 0;
                         }
@@ -140,13 +158,12 @@ var init = null; // externalized handle to the init function (see below)
             }
         }
     
-        // Initialization of templates and targets for templating
+        // Initialization of templates and template helpers
         var templateContent = $("#data-template").html();
         template = Handlebars.compile(templateContent);
         Handlebars.registerHelper('chkBoxHelper', function(checked) {
             return checked ? " CHECKED" : "";
         });
-        $htmlTarget = $("#noteList");
         
         // Dialog for changing the category/tag of all notes within a category/tag.
         $("#tagDlg").dialog({
