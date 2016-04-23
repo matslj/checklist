@@ -27,15 +27,24 @@ $status = "ERROR";
 $db = new CDatabaseController();
 $mysqli = $db->Connect();
 
-$text = $mysqli->real_escape_string($data -> text);
-$tag = $mysqli->real_escape_string($data -> tag);
-$listId = $data -> listId;
+$title = $mysqli->real_escape_string($data -> title);
+$description = $pc->VariableIsSetOrSetDefault($mysqli->real_escape_string($data -> description), "");
+$default = $pc->VariableIsSetOrSetDefault($data -> def, 0);
+$listId = $pc->VariableIsSetOrSetDefault($data -> listId, -1);
 
 CPageController::IsNumericOrDie($listId);
+CPageController::IsNumericOrDie($default);
 
-if ($text && $tag) {
-    $result = CNoteManager::addNote($db, $text, $tag, $listId);
-    $status = empty($result) ? "OK" : $status;
+if ($title) {
+    if ($listId > 0) {
+        // Update
+        $result = CNoteListManager::updateNoteList($db, $title, $description, $default, $listId);
+        $status = empty($result) ? "OK" : $status;
+    } else {
+        // Insert
+        $result = CNoteListManager::addNoteList($db, $title, $description);
+        $status = empty($result) ? "OK" : $status;
+    }
 }
 
 $mysqli->close();

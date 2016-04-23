@@ -69,11 +69,11 @@ class CNoteManager {
         return $this->notes;
     }
     
-    public static function addNote($dbRef, $text, $tag) {
+    public static function addNote($dbRef, $text, $tag, $noteListId) {
         $msg = "";
         
         $spCreateNote = DBSP_CreateNote;
-        $query = "CALL {$spCreateNote}('{$text}', '{$tag}');";
+        $query = "CALL {$spCreateNote}('{$text}', '{$tag}', {$noteListId});";
         
         // Perform the query
         $res = $dbRef->MultiQuery($query);
@@ -88,14 +88,14 @@ class CNoteManager {
         return $msg;
     }
     
-    public static function changeTag($dbRef, $mysqli, $oldTag, $newTag) {
+    public static function changeTag($dbRef, $mysqli, $oldTag, $newTag, $noteListId) {
         $msg = "";
         $tNote = DBT_Note;
         
         $query = <<< EOD
             UPDATE {$tNote} SET
                 tagNote = '{$newTag}'
-            WHERE tagNote = '{$oldTag}';
+            WHERE tagNote = '{$oldTag}' AND Note_idNoteList = {$noteListId};
 EOD;
 
         // Perform the query and manage results
@@ -108,7 +108,7 @@ EOD;
         return $msg;
     }
     
-    public static function getNotesFromDB($dbRef) {
+    public static function getNotesFromDB($dbRef, $noteListId) {
         $tNote = DBT_Note;
         
         $query = <<< EOD
@@ -119,6 +119,7 @@ EOD;
                 dateNote,
                 checkedNote
             FROM {$tNote}
+            WHERE Note_idNoteList = {$noteListId}
             ORDER BY tagNote ASC, textNote ASC;
 EOD;
 
@@ -134,14 +135,14 @@ EOD;
         return $notes;
     }
     
-    public function getNotesAsJson($dbRef = null) {
+    public function getNotesAsJson($dbRef, $noteListId) {
         $tempArray = null;
         
         if ($dbRef === null) {
             // php assigns arrays by copy (not deep copy though)
             $tempArray = $this -> notes;
         } else {
-            $tempArray = self::getNotesFromDB($dbRef);
+            $tempArray = self::getNotesFromDB($dbRef, $noteListId);
         }
         
         if (empty($tempArray)) {

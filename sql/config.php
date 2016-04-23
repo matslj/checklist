@@ -31,6 +31,7 @@ define('DBT_User', 		DB_PREFIX . 'User');
 define('DBT_Group', 		DB_PREFIX . 'Group');
 define('DBT_GroupMember',	DB_PREFIX . 'GroupMember');
 define('DBT_Note',      	DB_PREFIX . 'Note');
+define('DBT_NoteList',      	DB_PREFIX . 'NoteList');
 
 define('DBUDF_FCheckUserIsOwnerOrAdminOfSida',     DB_PREFIX . 'FCheckUserIsOwnerOrAdminOfSida');
 define('DBUDF_CheckUserIsAdmin',	           DB_PREFIX . 'FCheckUserIsAdmin');
@@ -52,5 +53,10 @@ define('DBSP_DeleteUser',                   DB_PREFIX . 'PDeleteUser');
 define('DBSP_CreateNote',                   DB_PREFIX . 'PCreateNote');
 define('DBSP_DeleteNote',                   DB_PREFIX . 'PDeleteNote');
 define('DBSP_CheckUncheckNote',             DB_PREFIX . 'PCheckUncheckNote');
+
+define('DBSP_CreateNoteList',               DB_PREFIX . 'PCreateNoteList');
+define('DBUDF_DeleteNoteList',              DB_PREFIX . 'FDeleteNoteList');
+define('DBUDF_NumberOfNotesInNoteList',     DB_PREFIX . 'FNumberOfNotesInNoteList');
+define('DBSP_UpdateNoteList',               DB_PREFIX . 'PUpdateNoteList');
 
 ?>

@@ -8,11 +8,11 @@
 class CNote {
     
     private $id;
-    private $text;
-    private $checked;
-    private $date;
-    private $updater;
-    private $tag;
+    private $text;    // The text in the note
+    private $checked; // Boolean value - true if the not is checked. False otherwise.
+    private $date;    // The date when the note was created
+    private $updater; // The userid of the updater/creator
+    private $tag;     // The group name of the note; every note with the same 'tag' is considered to be within the same group.
     
     public function __construct($id, $text, $checked, $date, $updater, $tag) {
         $this->id = $id;

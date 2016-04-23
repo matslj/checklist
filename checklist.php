@@ -3,7 +3,15 @@
 //
 // File: index.php
 //
-// Description: Main page of the application.
+// Description: Main page of the application. This app is more or less a one page
+//              application; once logged in the user never leaves this page (util logout).
+//              
+//              Data is presented through standard html and html presented through a
+//              handlebars template populated by an ajax request.
+//              
+//              What does it do then; it presents a dynamic checklist where a user can
+//              add new notes and categorize them. Categories can be changed, notes can
+//              be deleted and checked/unchecked.
 //
 // Author: Mats Ljungquist
 //
@@ -14,7 +22,7 @@ $intFilter = new CInterceptionFilter();
 $intFilter->UserIsSignedInOrRecirectToSignIn();
 
 // Set simple page variables that are used by template.php
-$shell['title'] = "Checklista översikt";
+$shell['title'] = "Kaninboets checklista";
 
 $pagesPath = WS_SITELINK . "pages/ajax/";
 $img = WS_IMAGES;
@@ -55,10 +63,10 @@ ob_end_clean();
 // ** Sätt headern i html body
 ob_start();
 ?>
-<h1>Checklista - översikt</h1>
+<h1>Kaninboets checklista</h1>
 <div id="promotext">   
 <p style='font-style: italic'>
-    Översiktssida för dina checklistor
+    En reseplanerare för kaniner
 </p>
 </div>
 <?php
@@ -78,7 +86,6 @@ ob_start();
 </div>
 
 <div id="noteList"></div>
-<div id="noteLists"></div>
 
 <!-- Dialoger -->
 <div id="tagDlg" title="Ändra kategori">
@@ -92,24 +99,6 @@ ob_start();
             <td><input type="text" id="tagDlgInput" name="tagDlgInput" placeholder="Ny kategori" /></td>
         </tr>
     </table>
-</div>
-
-<div id="noteListDlg" title="Ändra lista">
-    <div class="input-form">
-        <input type="hidden" id="dlgNoteListId" value="0" />
-        <div>
-            <label for="dlgNoteListTitle">Titel*</label>
-            <input type="text" id="dlgNoteListTitle"/>
-        </div>
-        <div>
-            <label for="dlgNoteListDescription">Beskrivning</label>
-            <textarea id="dlgNoteListDescription" rows="5" cols="50"></textarea>
-        </div>
-        <div class="last">
-            <input type="checkbox" id="dlgNoteListDefault"/>
-            <label for="dlgNoteListDefault">visas som standard</label>
-        </div>
-    </div>
 </div>
 
 <!-- Templates for the page -->
@@ -126,28 +115,6 @@ ob_start();
                     <td class="text{{chkBoxHelper checked}}">{{text}}</td>
                     <td>
                         <a class="deletePost" href="?id={{id}}">
-                            <img src="<?=$img?>close_16.png">
-                        </a>
-                    </td>
-                </tr>
-            {{/with}}
-        {{/each}}
-        </table>
-    </div>
-</script>
-
-<!-- Templates for the page -->
-<script id="list-template" type="text/x-handlebars-template">
-    {{! Templaten tar emot data som motsvaras av en CNoteList.php }}
-    <div class="notelistdata">
-        <a class="nl-command nl-create" href="#">Skapa lista</a>
-        <table>
-        {{#each this}}
-            {{#with this}}
-                <tr class="row">
-                    <td><a class="nl-command nl-change" href="?id={{id}}">{{title}}</a></td>
-                    <td>
-                        <a class="nl-command nl-edit" href="?id={{id}}">
                             <img src="<?=$img?>close_16.png">
                         </a>
                     </td>

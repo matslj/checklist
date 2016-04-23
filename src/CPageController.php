@@ -80,6 +80,11 @@ class CPageController {
 
             return isset($_SESSION["$aEntry"]) && !empty($_SESSION["$aEntry"]) ? $_SESSION["$aEntry"] : $aDefault;
     }
+    
+    public static function VariableIsSetOrSetDefault($aEntry, $aDefault = '') {
+
+            return isset($aEntry) && !empty($aEntry) ? $aEntry : $aDefault;
+    }
 
     // ------------------------------------------------------------------------------------
     //

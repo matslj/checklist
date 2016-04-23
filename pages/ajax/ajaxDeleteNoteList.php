@@ -1,11 +1,10 @@
 <?php
 // ===========================================================================================
 //
-// File: ajaxChangeTag.php
+// File: ajaxDeleteNote.php
 //
-// Description: Bulk change of tagNote of table note. All the notes with a tagNote
-//              <old value> will have their tagNotes changed to <new value>.
-//              
+// Description: Deletes a note with a given id from the database.
+// 
 //              Returns json with content-type text/html. Thought to be used in
 //              an ajax call.
 //
@@ -17,17 +16,17 @@ require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATO
 $intFilter = new CInterceptionFilter();
 $intFilter->UserIsSignedInOrRecirectToSignIn();
 
-// Retrive request parameters
+// Get request parameters and validate
 $pc = CPageController::getInstance(FALSE);
-$old    = $pc->POSTisSetOrSetDefault('old', '');
-$new    = $pc->POSTisSetOrSetDefault('new', '');
-$listId = $pc->POSTisSetOrSetDefault('listId', '');
+$id = $pc->GETisSetOrSetDefault('id', '');
 
-// Connect to db and perform bulk change
+CPageController::IsNumericOrDie($id);
+
+// Connect to db and delete note
 $db = new CDatabaseController();
 $mysqli = $db->Connect();
 
-$result = CNoteManager::changeTag($db, $mysqli, $old, $new, $listId);
+$result = CNoteListManager::deleteNoteList($db, $id);
 $status = empty($result) ? "OK" : "ERROR";
 
 $mysqli->close();

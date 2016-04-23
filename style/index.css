@@ -154,6 +154,20 @@ div.clear {
     font-size: 0.8em;
 }
 
+div.input-form label, div.input-form input, div.input-form textarea {
+    display: block;
+    width: 97%;
+}
+
+div.input-form textarea {
+    
+}
+
+div.input-form div.last label, div.input-form div.last input {
+    display: inline;
+    width: auto;
+}
+
 .CHECKED {
     text-decoration: line-through;
 }

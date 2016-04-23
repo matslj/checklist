@@ -14,20 +14,14 @@ require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATO
 $intFilter = new CInterceptionFilter();
 $intFilter->UserIsSignedInOrRecirectToSignIn();
 
-// Get request parameters and validate
-$pc = CPageController::getInstance(FALSE);
-$listId = $pc->GETisSetOrSetDefault('listId', '');
-
-CPageController::IsNumericOrDie($listId);
-
 // Connect to db and get all the notes
 $db = new CDatabaseController();
 $mysqli = $db->Connect();
 
-$notes = new CNoteManager();
+$notes = new CNoteListManager();
 
 // Return notes in json format (array of note objects)
-$jsonResult = $notes -> getNotesAsJson($db, $listId);
+$jsonResult = $notes -> getNoteListsAsJson($db);
 
 $mysqli->close();
 

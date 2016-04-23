@@ -14,6 +14,7 @@ $imageLink = WS_IMAGES;
 
 // Get the tablenames
 $tNote           = DBT_Note;
+$tNoteList       = DBT_NoteList;
 $tUser 		 = DBT_User;
 $tGroup 	 = DBT_Group;
 $tGroupMember 	 = DBT_GroupMember;
@@ -34,11 +35,17 @@ $spCreateNote                  = DBSP_CreateNote;
 $spDeleteNote                  = DBSP_DeleteNote;
 $spCheckUncheckNote            = DBSP_CheckUncheckNote;
 
+$spCreateNoteList              = DBSP_CreateNoteList;
+$udfDeleteNoteList             = DBUDF_DeleteNoteList;
+$udfNumberOfNotesInNoteList    = DBUDF_NumberOfNotesInNoteList;
+$spUpdateNoteList              = DBSP_UpdateNoteList;
+
 $fCheckUserIsAdmin              = DBUDF_CheckUserIsAdmin;
 
 // Create the query
 $query = <<<EOD
 DROP TABLE IF EXISTS {$tNote};
+DROP TABLE IF EXISTS {$tNoteList};
 DROP TABLE IF EXISTS {$tGroupMember};
 DROP TABLE IF EXISTS {$tUser};
 DROP TABLE IF EXISTS {$tGroup};
@@ -97,7 +104,22 @@ CREATE TABLE {$tGroupMember} (
   -- Attributes
 
 );
-  
+
+--
+-- Table for note list
+--
+CREATE TABLE {$tNoteList} (
+
+  -- Primary key(s)
+  idNoteList INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+
+  -- Attributes
+  titleNoteList VARCHAR(256) NOT NULL,
+  descriptionNoteList VARCHAR(256) NOT NULL,
+  created DATETIME NOT NULL,
+  isDefaultNoteList BOOLEAN NOT NULL
+);  
+
 --
 -- Table for notes
 --
@@ -110,7 +132,9 @@ CREATE TABLE {$tNote} (
   textNote VARCHAR(256) NOT NULL,
   tagNote VARCHAR(256) NOT NULL,
   dateNote DATETIME NOT NULL,
-  checkedNote BOOL NOT NULL
+  checkedNote BOOL NOT NULL,
+  Note_idNoteList INT NOT NULL,
+  FOREIGN KEY (Note_idNoteList) REFERENCES {$tNoteList}(idNoteList)
 );
 
 --
@@ -126,7 +150,57 @@ BEGIN
     WHERE
         idNote = anIdNote;
 END;
+    
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-- 
+-- SP to delete a NoteList
+-- 
+DROP FUNCTION IF EXISTS {$udfDeleteNoteList};
+CREATE FUNCTION {$udfDeleteNoteList}
+(
+    aNoteListId INT UNSIGNED
+)
+RETURNS TINYINT UNSIGNED
+DETERMINISTIC
+wrap: BEGIN
+    DECLARE i INT UNSIGNED;
+    -- Check permissions
+    SELECT {$udfNumberOfNotesInNoteList}(aNoteListId) INTO i;
+    -- If the return value from the udf is greater than zero, then the NoteList is not empty and may not be deleted.
+    IF i>0 THEN
+        RETURN 1;
+    END IF;
+    DELETE FROM {$tNoteList} WHERE idNoteList = aNoteListId;
+    -- Delete ok
+    RETURN 0;
+END wrap;
 
+-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-- 
+-- Function which returns the number of Notes in a NoteList.
+-- 
+-- Return values:
+-- 0 if NoteList is empty
+-- n where n is the number of Notes in the NoteList
+-- 
+DROP FUNCTION IF EXISTS {$udfNumberOfNotesInNoteList};
+CREATE FUNCTION {$udfNumberOfNotesInNoteList}
+(
+    aNoteListId INT UNSIGNED
+)
+RETURNS INT UNSIGNED
+READS SQL DATA
+BEGIN
+    DECLARE i INT UNSIGNED;
+    SELECT COUNT(idNote) INTO i FROM {$tNote}
+        WHERE
+        Note_idNoteList = aNoteListId;
+    IF i IS NULL THEN
+        RETURN 0;
+    END IF;
+        RETURN i;
+END; 
+    
 --
 -- SP to check/uncheck note
 --
@@ -143,6 +217,27 @@ BEGIN
                 idNote = anIdNote
         LIMIT 1;
 END;
+        
+--
+-- SP to check/uncheck note
+--
+DROP PROCEDURE IF EXISTS {$spUpdateNoteList};
+CREATE PROCEDURE {$spUpdateNoteList}
+(
+        IN anIdNoteList INT,
+        IN aTitleNoteList VARCHAR(256),
+        IN aDescriptionNoteList VARCHAR(256),
+        IN aIsDefaultNoteList BOOLEAN
+)
+BEGIN
+        UPDATE {$tNoteList} SET
+                titleNoteList = aTitleNoteList,
+                descriptionNoteList = aDescriptionNoteList,
+                isDefaultNoteList = aIsDefaultNoteList
+        WHERE
+                idNoteList = anIdNoteList
+        LIMIT 1;
+END;
    
 --
 -- SP to create a new note
@@ -151,13 +246,30 @@ DROP PROCEDURE IF EXISTS {$spCreateNote};
 CREATE PROCEDURE {$spCreateNote}
 (
 	IN aTextNote VARCHAR(256),
-	IN aTagNote VARCHAR(256)
+	IN aTagNote VARCHAR(256),
+        IN aNoteListId INT
 )
 BEGIN
         INSERT INTO {$tNote}
-                (textNote, tagNote, dateNote, checkedNote)
+                (textNote, tagNote, dateNote, checkedNote, Note_idNoteList)
                 VALUES
-                (aTextNote, aTagNote, NOW(), FALSE);
+                (aTextNote, aTagNote, NOW(), FALSE, aNoteListId);
+END;
+        
+--
+-- SP to create a new note
+--
+DROP PROCEDURE IF EXISTS {$spCreateNoteList};
+CREATE PROCEDURE {$spCreateNoteList}
+(
+	IN aTitleNoteList VARCHAR(256),
+        IN aDescriptionNoteList VARCHAR(256)
+)
+BEGIN
+        INSERT INTO {$tNoteList}
+                (titleNoteList, descriptionNoteList, created, isDefaultNoteList)
+                VALUES
+                (aTitleNoteList, aDescriptionNoteList, NOW(), false);
 END;
 
 --

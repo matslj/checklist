@@ -24,10 +24,10 @@ CPageController::IsNumericOrDie($listId);
 $db = new CDatabaseController();
 $mysqli = $db->Connect();
 
-$notes = new CNoteManager();
+$notes = new CNoteListManager();
 
 // Return notes in json format (array of note objects)
-$jsonResult = $notes -> getNotesAsJson($db, $listId);
+$jsonResult = $notes -> getNoteListAsJson($db, $listId);
 
 $mysqli->close();
 
