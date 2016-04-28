@@ -263,13 +263,16 @@ DROP PROCEDURE IF EXISTS {$spCreateNoteList};
 CREATE PROCEDURE {$spCreateNoteList}
 (
 	IN aTitleNoteList VARCHAR(256),
-        IN aDescriptionNoteList VARCHAR(256)
+        IN aDescriptionNoteList VARCHAR(256),
+        OUT aListId INT
 )
 BEGIN
         INSERT INTO {$tNoteList}
                 (titleNoteList, descriptionNoteList, created, isDefaultNoteList)
                 VALUES
                 (aTitleNoteList, aDescriptionNoteList, NOW(), false);
+        
+        SET aListId = LAST_INSERT_ID();
 END;
 
 --

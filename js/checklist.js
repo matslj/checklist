@@ -8,6 +8,7 @@
  */
 
 var init = null; // externalized handle to the init function (see below)
+var updateEntries = null;
 
 (function($) {
     
@@ -21,7 +22,6 @@ var init = null; // externalized handle to the init function (see below)
     init = function(config) {
         
         var $htmlTarget = $("#noteList"),                   // The html container where the notes will be presented
-            $htmlTargetList = $("#noteLists"),
             pagesPath = config.pagesPath,                   // Path to where all the ajax services resides.
             CONST_entriesInCol = config.colHeight,          // The minimum number of entries to be presented in a column
                                                             // before it breaks into another column.
@@ -29,38 +29,8 @@ var init = null; // externalized handle to the init function (see below)
             CONST_columnWidth = 260,                        // In pixels, includes right side margin
             $content = $("#content"),
             $templateContent = $("#data-template").html(),   // The handlebars template
-            $listTemplate = $("#list-template").html(),
             template = Handlebars.compile($templateContent), // A handle to the handlebars template
-            templateList = Handlebars.compile($listTemplate),
-            noteLists = null,
-            currentNoteList = null;
-
-        /**
-         * Extracts the value of a given (named) parameter from an url.
-         * 
-         * @param {type} name the name of the parameter whose value we are interested in
-         * @param {type} href the url, with parameter, from wich we want to extract the parameter value
-         * @returns {String} if parameter is present, return the parameter value. Otherwise return an empty string.
-         */
-        function getParameterByName(name, href) {
-            name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
-            var regexS = "[\\?&]"+name+"=([^&#]*)";
-            var regex = new RegExp( regexS );
-            var results = regex.exec( href );
-            if( results == null ) {
-                return "";
-            } else {
-                return decodeURIComponent(results[1].replace(/\+/g, " "));
-            }
-        }
-        
-        function getCurrentNoteList() {
-            if (currentNoteList === null) {
-                return {id:0};
-            } else {
-                return currentNoteList;
-            }
-        }
+            lists = chklist.List(pagesPath);
 
         /**
          * Updates the $htmlTarget with all the notes in the database. This gets
@@ -88,8 +58,8 @@ var init = null; // externalized handle to the init function (see below)
          *               processing in updateTemplateEntries()
          * @returns {undefined} returns nothing
          */
-        function updateTemplateEntries(callback) {
-            $.getJSON(pagesPath + 'ajaxGetNotes.php?listId=' + getCurrentNoteList().id, function( data ) {
+        var updateTemplateEntries = function(callback) {
+            $.getJSON(pagesPath + 'ajaxGetNotes.php?listId=' + lists.getCurrentNoteList().id, function( data ) {
 
                 $htmlTarget.empty();
                 // ********************************************************
@@ -145,51 +115,9 @@ var init = null; // externalized handle to the init function (see below)
                     callback();
                 }
             });
-        }
+        };
+        updateEntries = updateTemplateEntries;
         
-        function renderNoteLists() {
-            var $noteLists = $htmlTargetList.append('<div class="noteLists"/>').find(':last');
-            $noteLists.append(templateList(noteLists));
-        }
-        
-        function getNoteList(id) {
-            for (var i = 0; i < noteLists.length; i++) {
-                if (noteLists[i].id === id ) {
-                    return noteLists[i];
-                }
-            }
-            return null;
-        }
-        
-        function isDefinedOrSet(variable, defaultValue) {
-            return (typeof variable === 'undefined' ? defaultValue : variable);
-        } 
-        
-        function fetchNoteLists(renderNotes) {
-            renderNotes = isDefinedOrSet(renderNotes, false);
-            $.getJSON(pagesPath + 'ajaxGetNoteLists.php', function( data ) {
-                if (data) {
-                    if(data.length > 0) {
-                        $htmlTargetList.empty();
-                        // If no current note list is selected use the first
-                        // from the result
-                        if (!currentNoteList) {
-                            currentNoteList = data[0];
-                        }
-                        noteLists = data;
-
-                        // Render all the note lists
-                        renderNoteLists();
-
-                        if (renderNotes) {
-                            // Render notes for currents note list
-                            updateTemplateEntries();
-                        }
-                    }
-                }
-            });
-        }
-
         /**
          * Reads the values from input fields #newText and #newCategory and
          * creates a new post in the database through an ajax call. On successful
@@ -203,7 +131,7 @@ var init = null; // externalized handle to the init function (see below)
             var obj = {};
             obj.text = $("#newText").val();
             obj.tag = $("#newCategory").val();
-            obj.listId = getCurrentNoteList().id;
+            obj.listId = lists.getCurrentNoteList().id;
           
             
             if (obj.text && obj.tag) {
@@ -218,40 +146,6 @@ var init = null; // externalized handle to the init function (see below)
                         // $("#newCategory").val("");
                         $("#newText").focus();
                         updateTemplateEntries();
-                    }
-                });
-            }
-        }
-        
-        function upsertNoteList(title, description, def, id) {
-            console.log(title + " " + description + " "+ def + " "+ id);
-            // collect values
-            var obj = {},
-                renderNotes = true;
-            obj.title = title;
-            obj.description = description;
-            obj.def = def;
-            obj.listId = id;
-          
-            
-            if (id && currentNoteList && id === currentNoteList.id) {
-                renderNotes = false;
-            }
-            
-            if (obj.title) {
-                var json = JSON.stringify(obj);
-                $.ajax({
-                    url: pagesPath + 'ajaxUpsertNoteList.php',
-                    type:'POST',
-                    dataType: "json",
-                    data: {"payload": json},
-                    success: function(data) {
-                        console.log(data.status);
-                        if (data.status === "OK") {
-                            $("#newText").val("");
-                            $("#newText").focus();
-                            fetchNoteLists(obj.listId);
-                        }
                     }
                 });
             }
@@ -279,7 +173,7 @@ var init = null; // externalized handle to the init function (see below)
                             url: pagesPath + 'ajaxChangeTag.php',
                             type:'POST',
                             dataType: "json",
-                            data: "old=" + oldTag + "&new=" + newTag + "&listId=" + getCurrentNoteList().id,
+                            data: "old=" + oldTag + "&new=" + newTag + "&listId=" + lists.getCurrentNoteList().id,
                             success: function(data) {
                                 updateTemplateEntries();
                             }
@@ -288,53 +182,6 @@ var init = null; // externalized handle to the init function (see below)
                     $(this).dialog("close");
                 }
             }
-        });
-        
-        $("#noteListDlg").dialog({
-            autoOpen : false,
-            modal : true,
-            buttons : [
-                {
-                    id: "noteListDlg-btn-ok",
-                    text: "OK",
-                    click: function() {
-                        var title = $("#dlgNoteListTitle").val(),
-                            description = $("#dlgNoteListDescription").val(),
-                            def = 0,
-                            listId = $("#dlgNoteListId").val();
-                            
-                        if ($("#dlgNoteListDefault").is(':checked')) {
-                            def = 1;
-                        }
-                        
-                        upsertNoteList(title, description, def, listId);
-                        $(this).dialog("close");
-                    }
-                },
-                {
-                    id: "noteListDlg-btn-delete",
-                    text: "Ta bort lista",
-                    click: function() {
-                        var listId = $("#dlgNoteListId").val(),
-                            self = this;
-                        $.ajax({
-                            url: pagesPath + 'ajaxDeleteNoteList.php',
-                            type:'GET',
-                            dataType: "json",
-                            data: "id=" + listId,
-                            success: function(data) {
-                                if (data.status === "OK") {
-                                    fetchNoteLists(false);
-                                    $(self).dialog("close");
-                                } else {
-                                    alert("Kan inte radera listan");
-                                }
-                            }
-                        });
-                        
-                    }
-                }
-            ]
         });
 
         // The following two event handlers creates a new post by calling
@@ -368,7 +215,7 @@ var init = null; // externalized handle to the init function (see below)
                 } else {
                     href = $eventTarget.parent().attr('href');
                 }
-                id = getParameterByName("id", href);
+                id = utils.getParameterByName("id", href);
 
                 $.ajax({
                     url: pagesPath + 'ajaxDeleteNote.php',
@@ -421,7 +268,7 @@ var init = null; // externalized handle to the init function (see below)
                 return false;
             } else if ($eventTarget.is('a.editTag')) {
                 var href = $eventTarget.attr('href');
-                var tag = getParameterByName("tag", href);
+                var tag = utils.getParameterByName("tag", href);
                 
                 $("#tagDlg").dialog("open");
                 $("#tagDlg td.tdOldVal").html(tag);
@@ -431,66 +278,6 @@ var init = null; // externalized handle to the init function (see below)
             }
         });
         
-        $htmlTargetList.on("click", function(event) {
-            var $eventTarget = $(event.target);
-            
-            if ($eventTarget.is('a.nl-edit') || $eventTarget.is('a.nl-edit img')) {
-                var href = "", id = "", nlObj = null;
-                if ($eventTarget.is('a.nl-edit')) {
-                    href = $eventTarget.attr('href');
-                } else {
-                    href = $eventTarget.parent().attr('href');
-                }
-                id = getParameterByName("id", href);
-
-                nlObj = getNoteList(id);
-                $("#noteListDlg").dialog("open");
-                $("#noteListDlg-btn-delete").show();
-                $("#dlgNoteListTitle").val(nlObj.title).focus();
-                $("#dlgNoteListDescription").val(nlObj.description);
-                $("#dlgNoteListDefault").prop('checked', nlObj.def);
-                $("#dlgNoteListId").val(nlObj.id);
-
-                // Enable/disable delete button
-
-//                $.ajax({
-//                    url: pagesPath + 'ajaxDeleteNote.php',
-//                    type:'GET',
-//                    dataType: "json",
-//                    data: "id=" + id,
-//                    success: function(data) {
-//                        if (data.status === "OK") {
-//                            updateTemplateEntries();
-//                        }
-//                    }
-//                });
-                event.preventDefault();
-                return false;
-            } else if ($eventTarget.is('a.nl-change')) {
-                // Handles changes from one nodeList to another
-                // Fetch note list id from the query parameter associated with the clicked link
-                var href = $eventTarget.attr('href'),
-                    id   = getParameterByName("id", href);
-                
-                // Only perform change if a change has occurred (old id != new id)
-                if (id !== currentNoteList.id) {
-                    currentNoteList = getNoteList(id);
-                    updateTemplateEntries();
-                }
-                event.preventDefault();
-                return false;
-            } else if ($eventTarget.is('a.nl-create')) {
-                $("#noteListDlg").dialog("open");
-                $("#noteListDlg-btn-delete").hide();
-                $("#dlgNoteListTitle").val("").focus();
-                $("#dlgNoteListDescription").val("");
-                $("#dlgNoteListDefault").prop('checked', false);
-                $("#dlgNoteListId").val("");
-                event.preventDefault();
-                return false;
-            }
-        });
-
-        fetchNoteLists(true);
+        lists.fetchListAndNotes();
     };
 })(jQuery);

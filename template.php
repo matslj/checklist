@@ -74,6 +74,14 @@ EOD;
             ?><script type="text/javascript" src="<?=$javascript . $shell['handlebars'] ?>"></script><?php
             }
             ?>
+            <?php
+            if ( $shell['slidepanel'] ) {
+            ?>
+            <script type="text/javascript" src="<?=$javascript . $shell['slidepanel'] ?>"></script>
+            <link rel="stylesheet" type="text/css" href="<?=$javascript . $shell['slidepanel-css'] ?>">
+            <?php
+            }
+            ?>
             <link rel="stylesheet" type="text/css" href="<?= $site ?>style/index.css">
 
             <?= empty($shell['html_head']) ? "" : $shell['html_head'] ?>

@@ -62,6 +62,9 @@ class CDatabaseController {
             return !is_null(@get_resource_type($possibleResource));
         }
 
+        public function getLastInsertId() {
+            return $this->iMysqli->insert_id; 
+        }
 
 	// ------------------------------------------------------------------------------------
 	//

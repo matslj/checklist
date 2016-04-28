@@ -18,7 +18,9 @@ $shell['title'] = "Checklista översikt";
 
 $pagesPath = WS_SITELINK . "pages/ajax/";
 $img = WS_IMAGES;
+$javascriptUtils = WS_JAVASCRIPT . "utils.js";
 $javascript = WS_JAVASCRIPT . "checklist.js";
+$javascript2 = WS_JAVASCRIPT . "chklist.lists.js";
 
 // ========================================================================== //
 // HTML HEAD
@@ -26,7 +28,9 @@ $javascript = WS_JAVASCRIPT . "checklist.js";
 
 ob_start();
 ?>
+<script type="text/javascript" src="<?= $javascriptUtils ?>"></script>
 <script type="text/javascript" src="<?= $javascript ?>"></script>
+<script type="text/javascript" src="<?= $javascript2 ?>"></script>
 <script type="text/javascript">
 var isMobile = false; //initiate as false
 // device detection
@@ -36,6 +40,7 @@ if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine
 
 (function($) {
     $(document).ready(function() {
+        
         init({
             colHeight : isMobile ? 600 : 30,
             pagesPath : '<?= $pagesPath ?>'
@@ -78,7 +83,12 @@ ob_start();
 </div>
 
 <div id="noteList"></div>
-<div id="noteLists"></div>
+<div id="noteListsWrapper">
+    <a class="nl-command nl-create" href="#">Skapa lista</a>
+    <div id="noteLists"></div>
+</div>
+
+<a href="#" class="panel">Show Panel</a>
 
 <!-- Dialoger -->
 <div id="tagDlg" title="Ändra kategori">
@@ -97,6 +107,7 @@ ob_start();
 <div id="noteListDlg" title="Ändra lista">
     <div class="input-form">
         <input type="hidden" id="dlgNoteListId" value="0" />
+        <div class="errorMsg"></div>
         <div>
             <label for="dlgNoteListTitle">Titel*</label>
             <input type="text" id="dlgNoteListTitle"/>
@@ -104,6 +115,8 @@ ob_start();
         <div>
             <label for="dlgNoteListDescription">Beskrivning</label>
             <textarea id="dlgNoteListDescription" rows="5" cols="50"></textarea>
+        </div>
+        <div class="ddOldLists">
         </div>
         <div class="last">
             <input type="checkbox" id="dlgNoteListDefault"/>
@@ -140,7 +153,6 @@ ob_start();
 <script id="list-template" type="text/x-handlebars-template">
     {{! Templaten tar emot data som motsvaras av en CNoteList.php }}
     <div class="notelistdata">
-        <a class="nl-command nl-create" href="#">Skapa lista</a>
         <table>
         {{#each this}}
             {{#with this}}

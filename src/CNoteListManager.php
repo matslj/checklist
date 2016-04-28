@@ -90,19 +90,35 @@ EOD;
         return json_encode($tempNoteList);
     }
 
-    public static function addNoteList($dbRef, $title, $description) {
+    public static function addNoteList($dbRef, $title, $description, $copyId) {
         $msg = "";
+        $noteLists = null;
+        $lastId = -1;
         
         $spCreateNoteList = DBSP_CreateNoteList;
-        $query = "CALL {$spCreateNoteList}('{$title}', '{$description}');";
+        $query = <<< EOD
+            SET @aListId = {$lastId};
+            CALL {$spCreateNoteList}('{$title}', '{$description}', @aListId);
+            SELECT @aListId AS id;
+EOD;
         
         // Perform the query
         $res = $dbRef->MultiQuery($query);
         if ($res != null && $res != false) {
-            // Ignore results but count successful statements.
-            $nrOfStatements = $dbRef->RetrieveAndIgnoreResultsFromMultiQuery();
-            if($nrOfStatements != 1) {
-                $msg .= "Fel: kunde inte skapa en NoteList";
+            $results = Array();
+            $dbRef->RetrieveAndStoreResultsFromMultiQuery($results);
+            $row = $results[2]->fetch_object();
+            $lastId = $row->id;
+            $results[2]->close();
+        }
+
+        // Preload list with values from other note list
+        if (empty($msg) && $lastId >= 0 && $copyId >= 0) {
+            
+            $noteLists = CNoteManager::getNotesFromDB($dbRef, $copyId);
+            
+            foreach ($noteLists as $value) {
+                CNoteManager::addNote($dbRef, $value->getText(), $value->getTag(), $lastId);
             }
         }
 

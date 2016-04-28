@@ -32,6 +32,8 @@ $shell['jquery'] = 'jquery/jquery-1.7.2.min.js';
 $shell['jquery-ui'] = 'jquery-ui/jquery-ui-1.9.2.custom.min.js';
 $shell['jquery-ui-css'] = 'jquery-ui/cupertino/jquery-ui-1.9.2.custom.min.css';
 $shell['handlebars'] = 'handlebars/handlebars-v1.3.0.js'; // For templating. For more information see http://handlebarsjs.com/
+$shell['slidepanel'] = 'slidepanel/js/jquery.slidepanel.js';
+$shell['slidepanel-css'] = 'slidepanel/css/jquery.slidepanel.css';
 
 //
 // Enable autoload for classes. User PEAR naming scheme for classes.
