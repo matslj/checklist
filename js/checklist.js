@@ -30,7 +30,7 @@ var updateEntries = null;
             $content = $("#content"),
             $templateContent = $("#data-template").html(),   // The handlebars template
             template = Handlebars.compile($templateContent), // A handle to the handlebars template
-            lists = chklist.List(pagesPath);
+            lists = chklist.List(pagesPath);                 // a handle to the list of list of notes handler
 
         /**
          * Updates the $htmlTarget with all the notes in the database. This gets

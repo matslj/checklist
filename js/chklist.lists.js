@@ -5,25 +5,42 @@
  */
 var chklist = chklist || {};
 
+/**
+ * This class handles lists of notelists in the UI. The lists of notelists
+ * are presented using a slide in panel (from the right). The slide in panel
+ * originates from http://codebomber.com/jquery/slidepanel/
+ * but is modified for this application.
+ * <br>
+ * The public methods are listed last (in the 'that'-object).
+ * 
+ * @author Mats Ljungquist
+ * 
+ * @param {type} pagesPath path to the location of the ajax (restlike) pages.
+ * @returns {chklist.List.that} an object with a few public methods (see last)
+ */
 chklist.List = function(pagesPath) {
     var $listTemplate = $("#list-template").html(),
         $htmlTargetList = $("#noteLists"),
-        $htmlTargetListsWrapper = $("#noteListsWrapper"),
+        $htmlTargetListsWrapper = $('#noteListsWrapper'),
         templateList = Handlebars.compile($listTemplate),
+        $mainTitle = $("#main-title"),
+        $promoText = $("p", "#promotext"),
         noteLists = null,
         currentNoteList = null,
-        $panel = null,
-        $panelDrawArea = null,
         that = null;
 
-    $('.panel').slidepanel({
-        orientation: 'right',
-        mode: 'overlay',
-        static: true
+    $htmlTargetListsWrapper.slidepanel({
+        orientation: 'right'
     });
-    $panel = $('.panel').data('plugin_slidepanel').$panel;
-    $panelDrawArea = $('.inner .wrapper', $panel);
     
+    /**
+     * Utility function for checking if a variable is set and if not
+     * give it a default value.
+     * 
+     * @param {type} variable the variable to be checked
+     * @param {type} defaultValue the default value if variable not set
+     * @returns {unresolved} either the unchanged value or the default value.
+     */
     function isDefinedOrSet(variable, defaultValue) {
         return (typeof variable === 'undefined' ? defaultValue : variable);
     }
@@ -40,6 +57,14 @@ chklist.List = function(pagesPath) {
         }
     }
     
+    /**
+     * Creates a drop down list which will be used for copying all notes from an older list into a new one.
+     * <br>
+     * Affects UI.
+     * 
+     * @param {type} selector the selector of the element that should wrap the drop down list created by this method
+     * @returns {undefined} nothing (affectes selector element directly)
+     */
     function createListDD(selector) {
         var html = "<label for='dlgNoteListCopy'>Kopiera lista</label><select id='dlgNoteListCopy'><option value='-1'>---</option>",
             i = 0;
@@ -52,6 +77,12 @@ chklist.List = function(pagesPath) {
         }
     }
     
+    /**
+     * Retrieves note list by id.
+     * 
+     * @param {type} id of note list to retrieve
+     * @returns {chklist.List.noteLists} the note list corresponding to the id in the parameter or null if no such exist
+     */
     function getNoteListInternal(id) {
         for (var i = 0; i < noteLists.length; i++) {
             if (noteLists[i].id === id ) {
@@ -61,6 +92,29 @@ chklist.List = function(pagesPath) {
         return null;
     }
     
+    /**
+     * Sets the title and the subtitle (promo) of the page if currentNoteList is
+     * set. The promo is truncated to 50 chars if longer.
+     * 
+     * @returns {undefined} no returns, modifies the dom.
+     */
+    function setTitleAndPromoFromCurrentNoteList() {
+        if (currentNoteList && currentNoteList.title) {
+            $mainTitle.empty();
+            $mainTitle.html(currentNoteList.title);
+            var d = currentNoteList.description,
+                l = d.length;
+            if (l > 50) {
+                d = d.substring(0, 49) + "...";
+            }
+            $promoText.html(d);
+        }
+    }
+    
+    /**
+     * 
+     * @returns {undefined}
+     */
     function renderNoteLists() {
         var $noteLists = $htmlTargetList.append('<div class="noteLists"/>').find(':last');
         $noteLists.append(templateList(noteLists));
@@ -72,15 +126,19 @@ chklist.List = function(pagesPath) {
             if (data) {
                 if(data.length > 0) {
                     $htmlTargetList.empty();
+                    noteLists = data;
+                    
                     // If no current note list is selected use the first
                     // from the result
                     if (!currentNoteList) {
                         currentNoteList = data[0];
+                    } else {
+                        // Refresh current note list
+                        currentNoteList = getNoteListInternal(currentNoteList.id);
                     }
+                    setTitleAndPromoFromCurrentNoteList();
 
                     enableDisable();
-
-                    noteLists = data;
 
                     // Render all the note lists
                     renderNoteLists();
@@ -99,7 +157,7 @@ chklist.List = function(pagesPath) {
     }
         
     function upsertNoteList(title, description, def, id, copyId) {
-        console.log(title + " " + description + " "+ def + " "+ id + " copyId: " + copyId);
+        // console.log(title + " " + description + " "+ def + " "+ id + " copyId: " + copyId);
         // collect values
         var obj = {};
             //renderNotes = true;
@@ -122,7 +180,7 @@ chklist.List = function(pagesPath) {
                 dataType: "json",
                 data: {"payload": json},
                 success: function(data) {
-                    console.log(data.status);
+                    // console.log(data.status);
                     if (data.status === "OK") {
                         $("#newText").val("");
                         $("#newText").focus();
@@ -191,6 +249,7 @@ chklist.List = function(pagesPath) {
         ]
     });
     
+    // Events on the list of notes - edit, change/switch and create note list.
     $htmlTargetListsWrapper.on("click", function(event) {
         var $eventTarget = $(event.target);
 
@@ -235,6 +294,7 @@ chklist.List = function(pagesPath) {
             // Only perform change if a change has occurred (old id != new id)
             if (id !== currentNoteList.id) {
                 currentNoteList = getNoteListInternal(id);
+                setTitleAndPromoFromCurrentNoteList();
                 updateEntries();
             }
             event.preventDefault();
@@ -253,7 +313,13 @@ chklist.List = function(pagesPath) {
         }
     });
     
+    // Public methods
     that = {
+        /**
+         * Returns the currently selected notelist or, if no such exist, the first notelist.
+         * 
+         * @returns {chklist.List.currentNoteList} the  current notelist or the first if no list is selected.
+         */
         getCurrentNoteList: function () {
             if (currentNoteList === null) {
                 return {id:0};
@@ -262,14 +328,30 @@ chklist.List = function(pagesPath) {
             }
         },
         
+        /**
+         * Returns all the note lists.
+         * 
+         * @returns {chklist.List.noteLists}
+         */
         getNoteLists: function() {
             return noteLists;
         },
         
+        /**
+         * Retrieves note list by id.
+         * 
+         * @param {type} id of note list to retrieve
+         * @returns {chklist.List.noteLists} the note list corresponding to the id in the parameter or null if no such exist
+         */
         getNoteList: function(id) {
             return getNoteListInternal(id);
         },
         
+        /**
+         * Populates the UI with lists and notes.
+         * 
+         * @returns {undefined} nothing - populates the UI directly
+         */
         fetchListAndNotes: function() {
             fetchNoteLists(true);
         }

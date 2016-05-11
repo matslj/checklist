@@ -14,7 +14,8 @@ html, body {
 }
 
 body {
-    background: url("body.gif") repeat scroll 0 0 #ededed;
+    /*background: url("body.gif") repeat scroll 0 0 #ededed;*/
+    background-color: #E4EFFB;
     font-family: "Lucida Grande","Lucida Sans Unicode",sans-serif;
     font-size: 70%;
     line-height: 1.3em;
@@ -38,11 +39,16 @@ h1 {
 
 #header {
     padding: 10px 20px;
+    background-color: #86AAD3;
+    -webkit-box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.42);
+    -moz-box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.42);
+    box-shadow: 0px 6px 5px 0px rgba(0,0,0,0.42);
 }
 
 #header h1 {
     padding: 0;
     margin: 0;
+    color: #E4EFFB;
 }
 
 #header p {
@@ -52,9 +58,7 @@ h1 {
 
 #content {
     margin: 0 20px;
-    background-color: #ffffff;
-    border: 2px solid #2d8f8b;
-    padding: 20px;
+    padding: 20px 0;
 }
 
 /* Allmänna */
@@ -69,6 +73,7 @@ div.clear {
     border: 1px solid #ccc;
     padding: 10px;
     margin: 5px 0 0 0;
+    background-color: #ffffff;
     -webkit-border-radius: 7px;
     -moz-border-radius: 7px;
     border-radius: 7px;
@@ -201,4 +206,26 @@ div.input-form div.last label, div.input-form div.last input {
     .notedata a.editTag {
         display: none;
     }
+}
+
+/* Notelist */
+#noteListsWrapper {
+    background-color: white;
+    padding: 10px;
+    display: none;
+    /*overflow-y: auto;*/
+    /*height: 100%;*/
+}
+
+#noteListsWrapper a.nl-create, noteListsWrapper a.nl-create:link {
+    text-decoration: none;
+}
+
+#noteListsWrapper .notelistdata table {
+    width: 100%;
+}
+
+#noteListsWrapper .notelistdata tr td:last-child {
+    width: 25px;
+    text-align:center;
 }

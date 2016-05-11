@@ -1,13 +1,9 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- * Description of CNoteListManager
+ * Description of CNoteListManager.
+ * Manages lists of lists of notes. All database handling regarding
+ * the CNoteList goes through this class.
  *
  * @author Mats Ljungquist
  */
@@ -16,6 +12,14 @@ class CNoteListManager {
     public function __construct() {
     }
     
+    /**
+     * Retrieves a list of a list of notes from the database. The result
+     * is sorted so that the default list (there should only be one) will
+     * be returned first in the list, and then the rest is sorted by creation date.
+     * 
+     * @param type $dbRef
+     * @return \CNoteList an array of CNoteLists
+     */
     public static function getNoteListsFromDB($dbRef) {
         $tNoteList = DBT_NoteList;
         
@@ -27,7 +31,7 @@ class CNoteListManager {
                 created,
                 isDefaultNoteList as def
             FROM {$tNoteList}
-            ORDER BY isDefaultNoteList ASC, created ASC;
+            ORDER BY isDefaultNoteList DESC, created DESC;
 EOD;
 
         // Perform the query and manage results
@@ -42,6 +46,14 @@ EOD;
         return $noteLists;
     }
     
+    /**
+     * Retrieves a single list of notes from the database using the id
+     * of the list of notes.
+     * 
+     * @param type $dbRef db reference
+     * @param type $listId the id of the list of notes that should be retrieved
+     * @return type a single CNoteList
+     */
     public static function getNoteListFromDB($dbRef, $listId) {
         $tNoteList = DBT_NoteList;
         
@@ -64,6 +76,12 @@ EOD;
         return $noteList;
     }
     
+    /**
+     * Same as getNoteListsFromDB() but returns the result as Json.
+     * 
+     * @param type $dbRef
+     * @return string
+     */
     public function getNoteListsAsJson($dbRef = null) {
         $tempArray = null;
         
@@ -84,6 +102,13 @@ EOD;
         }
     }
     
+    /**
+     * Same as getNoteListFromDB but result returned as JSON.
+     * 
+     * @param type $dbRef
+     * @param type $listId
+     * @return type
+     */
     public function getNoteListAsJson($dbRef = null, $listId) {
         $tempNoteList = self::getNoteListFromDB($dbRef, $listId);
         $tempNoteList = $tempNoteList -> toJson();

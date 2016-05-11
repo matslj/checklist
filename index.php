@@ -60,11 +60,11 @@ ob_end_clean();
 // ** Sätt headern i html body
 ob_start();
 ?>
-<h1>Checklista - översikt</h1>
+<h1 id="main-title">Checklista</h1>
 <div id="promotext">   
-<p style='font-style: italic'>
-    Översiktssida för dina checklistor
-</p>
+    <p style='font-style: italic'>
+        Översiktssida för dina checklistor
+    </p>
 </div>
 <?php
 $shell['html_header'] = ob_get_contents();
@@ -84,11 +84,9 @@ ob_start();
 
 <div id="noteList"></div>
 <div id="noteListsWrapper">
-    <a class="nl-command nl-create" href="#">Skapa lista</a>
+    <h2><a class="nl-command nl-create" href="#">[Skapa lista]</a></h2>
     <div id="noteLists"></div>
 </div>
-
-<a href="#" class="panel">Show Panel</a>
 
 <!-- Dialoger -->
 <div id="tagDlg" title="Ändra kategori">
@@ -160,7 +158,7 @@ ob_start();
                     <td><a class="nl-command nl-change" href="?id={{id}}">{{title}}</a></td>
                     <td>
                         <a class="nl-command nl-edit" href="?id={{id}}">
-                            <img src="<?=$img?>close_16.png">
+                            <img src="<?=$img?>edit.png">
                         </a>
                     </td>
                 </tr>
