@@ -1,3 +1,5 @@
 # This will be ignored in this folder
-nbproject/
-build/
+.vagrant/
+.settings/
+.buildpath
+.project
