@@ -28,6 +28,11 @@ credentials or with a firewall.
 5. Open phpmyadmin (or similar) and create a user (for details see below).
 6. goto <your site>/<install dir>/ you should now be prompted with a login-page. Login with your user.
 
+# With Vagrant
+1. Vagrant up
+2. Goto http://192.168.33.99/checklist/pages/install/PInstall.php and follow the instructions.
+3. Goto http://192.168.33.99/checklist/ and log in.
+
 ### Create a user
 
 ```

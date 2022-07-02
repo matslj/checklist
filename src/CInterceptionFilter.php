@@ -49,8 +49,8 @@ class CInterceptionFilter {
 	//
 	public function FrontControllerIsVisitedOrDie() {
 
-                // När man använder det reserverade ordet 'global' så innebär det att i en funktion
-                // talar om att man vill referera till den globala 'varianten' av variabeln (Closesurs)
+        // När man använder det reserverade ordet 'global' så innebär det att i en funktion
+        // talar om att man vill referera till den globala 'varianten' av variabeln (Closesurs)
 		global $templateVisited; // Always defined in frontcontroller
 
 		if(!isset($templateVisited) || $templateVisited === false) {

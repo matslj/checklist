@@ -14,8 +14,8 @@ Vagrant.configure("2") do |config|
   # boxes at https://vagrantcloud.com/search.
   config.vm.box = "hashicorp/bionic64"
 
-  config.vm.provision :shell, path: "bootstrap.sh", args: "/vagrant"
-  config.vm.provision :shell, path: "mariadb_provision.sh"
+  config.vm.provision :shell, path: "provision/bash/bootstrap.sh", args: "/var/www/html/checklist"
+  config.vm.provision :shell, path: "provision/bash/mariadb_provision.sh"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -47,8 +47,8 @@ Vagrant.configure("2") do |config|
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
-    
-  config.vm.synced_folder "src/", "/vagrant"
+
+  config.vm.synced_folder ".", "/var/www/html/checklist"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.

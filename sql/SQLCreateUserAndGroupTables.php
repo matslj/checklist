@@ -507,12 +507,12 @@ END;
 --
 -- Add default user(s)
 --
-INSERT INTO {$tUser} (accountUser, emailUser, nameUser, lastLoginUser, passwordUser,  activeUser)
-VALUES ('admin', 'admin@noreply.se', 'Mr Admin', NOW(), md5('hemligt'), FALSE);
-INSERT INTO {$tUser} (accountUser, emailUser, nameUser, lastLoginUser, passwordUser, activeUser)
-VALUES ('mats', 'mats@noreply.se', 'Mats Ljungquist', NOW(), md5('stugan2015'), TRUE);
-INSERT INTO {$tUser} (accountUser, emailUser, nameUser, lastLoginUser, passwordUser, activeUser)
-VALUES ('disa', 'disa@noreply.se', 'Disa Holmlander', NOW(), md5('stugan2015'), TRUE);
+INSERT INTO {$tUser} (accountUser, emailUser, nameUser, lastLoginUser, passwordUser,  activeUser, deletedUser)
+VALUES ('admin', 'admin@noreply.se', 'Mr Admin', NOW(), md5('hemligt'), FALSE, FALSE);
+INSERT INTO {$tUser} (accountUser, emailUser, nameUser, lastLoginUser, passwordUser, activeUser, deletedUser)
+VALUES ('mats', 'mats@noreply.se', 'Mats Ljungquist', NOW(), md5('stugan2015'), TRUE, FALSE);
+INSERT INTO {$tUser} (accountUser, emailUser, nameUser, lastLoginUser, passwordUser, activeUser, deletedUser)
+VALUES ('disa', 'disa@noreply.se', 'Disa Holmlander', NOW(), md5('stugan2015'), TRUE, FALSE);
     
 --
 -- Add default groups

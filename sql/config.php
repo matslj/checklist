@@ -13,9 +13,9 @@
 //
 // Settings for the database connection
 //
-define('DB_HOST', 	'localhost');           // The database host
-define('DB_USER', 	'mats');		// The username of the database
-define('DB_PASSWORD', 	'hemligt');		// The users password
+define('DB_HOST', 	'192.168.33.99');           // The database host
+define('DB_USER', 	'root');		// The username of the database
+define('DB_PASSWORD', 	'');		// The users password
 define('DB_DATABASE', 	'sanxion');		// The name of the database to use
 
 //
@@ -27,11 +27,11 @@ define('DB_PREFIX', 'chk_');    // Prefix to use infront of tablename and views
 //
 // Define the names for the database (tables, views, procedures, functions, triggers)
 //
-define('DBT_User', 		DB_PREFIX . 'User');
+define('DBT_User',          DB_PREFIX . 'User');
 define('DBT_Group', 		DB_PREFIX . 'Group');
 define('DBT_GroupMember',	DB_PREFIX . 'GroupMember');
 define('DBT_Note',      	DB_PREFIX . 'Note');
-define('DBT_NoteList',      	DB_PREFIX . 'NoteList');
+define('DBT_NoteList',      DB_PREFIX . 'NoteList');
 
 define('DBUDF_FCheckUserIsOwnerOrAdminOfSida',     DB_PREFIX . 'FCheckUserIsOwnerOrAdminOfSida');
 define('DBUDF_CheckUserIsAdmin',	           DB_PREFIX . 'FCheckUserIsAdmin');

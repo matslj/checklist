@@ -41,7 +41,7 @@ if ($text && $tag) {
 $mysqli->close();
 
 // Return status (of how the db operation went) in json format
-$jsonResult .= <<< EOD
+$jsonResult = <<< EOD
 {
     "status": "{$status}"
 }

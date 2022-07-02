@@ -17,10 +17,21 @@
 // Author: Mats Ljungquist
 //
 
-define('WS_SITELINK',   'http://localhost/checklist/');           // Link to site.
+if (isset($_SERVER['HTTPS']) && ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+	$url = "https://";
+} else {
+	$url = "http://";
+}
+// Append the host(domain name, ip) to the URL.
+$url.= $_SERVER['HTTP_HOST'];
+
+define('WS_CONTEXT_ROOT', 	'checklist');
+
+define('WS_SITELINK',   $url . '/' . WS_CONTEXT_ROOT . '/');           // Link to site.
 define('WS_CHARSET', 	'utf-8');
 define('WS_IMAGES',	 WS_SITELINK . 'images/');                // Relative path to site image folder
 define('WS_JAVASCRIPT',	 WS_SITELINK . 'js/');	                  // Relative path to site JavaScript code
+define('WS_LOGGER', 'none');
 
 define("TP_ROOT",	  dirname(__FILE__) . DIRECTORY_SEPARATOR);                                 // The root of installation
 define("TP_SOURCEPATH",	  dirname(__FILE__) . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR);   // Classes, functions, code
